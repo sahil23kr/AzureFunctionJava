@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azurefuncdeployment
+  labels:
+    app: azurefunction
+spec:
+  replicas: 6
+  template:
+    metadata:
+      name: azurefunction
+      labels:
+        app: azurefunction
+    spec:
+      containers:
+      - name: employeeregistry
+        image: employeeregistry.azurecr.io
+        imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: azurefunction
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: azurefunction
+spec:
+  selector:
+    app: azurefunction
+  ports:
+    - port: 80
+  type: NodePort
